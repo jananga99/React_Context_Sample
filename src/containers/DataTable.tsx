@@ -1,36 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Box } from '@mui/system';
-import { Button, styled } from '@mui/material';
-import { columns, gridPageSize, rows } from '../utils/constants';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { columns } from '../utils/constants';
+import { DataGrid } from '@mui/x-data-grid';
+import { useAppContext } from '../context/appContext';
 
-
-const ModelContainer = styled(Box)(() => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  bgcolor: 'background.paper',
-  boxShadow: '24px',
-  p: '4px'
-}));
 function DataTable(): JSX.Element {
-
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(gridPageSize);
   
-  useEffect(() => {
-    refresh();
-  }, [page]);
+const {loading, fetchData, data, error} = useAppContext();
 
-  const refresh = (): void => {
-   // GET DATA
-  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if(error){
+      alert(error);
+    }
+  }, [error]);
 
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={rows}
+        rows={data ?? []}
         columns={columns}
+        loading={loading}
         initialState={{
           pagination: {
             paginationModel: {
